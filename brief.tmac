@@ -1,0 +1,149 @@
+.\" Makros für Erstellung von DIN-Brief (Deutschland)
+.\" Autor: Christian Schaller
+.\" Version: 2010-09-12
+.\"
+.\" Beispiel:
+.\"
+.\"    .AbsenderName Vorname Nachname
+.\"    .AbsenderAdresse
+.\"    Straße
+.\"    PLZ Ort
+.\"    etc
+.\"    .Empfänger
+.\"    Empfängername
+.\"    Adresse
+.\"    PLZ Ort
+.\"    .OrtDatum Ort [Datum]
+.\"    .Betreff
+.\"    Betreff des Briefes
+.\"    .Text
+.\"    Sehr geehrte Damen und Herren,
+.\"
+.\"    blablabla
+.\"
+.\"    .MfG
+.\"
+.\"    .Anlagen
+.\"
+.\" roff -mbrief -M<directory of this macro set> <input-file>
+.\" --------------------------------------------------------------------
+.\" TODO:
+.\" - Makros überarbeiten (gerade bei Adressen, da Leerzeilen fix einge-
+.\"   arbeitet sind (ohne Firma, Professor, etc)
+.\" - harmonisieren mit -ms Makros (Aufruf muss aktuell ohne Makropakete
+.\"   erfolgen) ==> Einfach nur -ms hinzufügen?
+.\" --------------------------------------------------------------------
+.\" --------------------------------------------------------------------
+.
+.nr DEBUG 0
+.\" -- Variablen -----------------------------------------------------------
+.\" nicht bedruckbarer Seitenrand
+.nr Druckrand 0.3c
+.
+.nr EinzugKopf 2c
+.nr EinzugText 2.41c
+.nr LängeMarkierung 0.3c
+.nr Kreuz 0.2c
+.\" ------------------------------------------------------------------------
+.
+.ad l
+.
+.
+.de AbsenderName
+.ds Absender \\$*
+..
+.de AbsenderAdresse
+.po \n[EinzugKopf]u
+.sp |1c
+\\*[Absender]
+..
+.de Empfänger
+.po \n[EinzugKopf]u
+.if \n[DEBUG] \{
+.\" more debug: full line
+.\"\v'|3.39c'\l'8.4c'
+.\" upper left -
+\v'|3.39c'\D'l \\n[Kreuz]u 0'
+.br
+.\" upper left |
+\v'|3.39c'\D'l 0 \\n[Kreuz]u'
+.br
+.\" upper right -
+\v'|3.39c'\h'8.4c-\\n[Kreuz]u-\\n[Druckrand]u+\\n[Kreuz]u'\D'l \\n[Kreuz]u 0'
+.br
+.\" upper right |
+\v'|3.39c'\h'8.4c-\\n[Druckrand]u+\\n[Kreuz]u'\D'l 0 \\n[Kreuz]u'
+.br
+.\" more debug: full line
+.\"\v'|3.39c+4c'\l'8.4c'
+.\" lower left -
+\v'|3.39c+4c'\D'l \\n[Kreuz]u 0'
+.br
+.\" lower left |
+\v'|3.39c+4c'\D'l 0 -\\n[Kreuz]u'
+.br
+.\" lower right -
+\v'|3.39c+4c'\h'8.4c-\\n[Druckrand]u+\\n[Kreuz]u'\D'l -\\n[Kreuz]u 0'
+.br
+.\" lower right |
+\v'|3.39c+4c'\h'8.4c-\\n[Druckrand]u+\\n[Kreuz]u'\D'l 0 -\\n[Kreuz]u'
+\}
+.sp |3.39c
+.sp 3
+..
+.de OrtDatum
+.ll 21c-4.41c
+.sp |8.7c
+.rj
+.ie \\n[.$]-1 \\$1, \\$2
+.el \\$1, \n(dy.\n(mo.\n[year]
+.po 2.41c
+..
+.de Betreff
+.sp |10.5c
+.sp 2
+\fB
+..
+.de Text
+\fR
+.fi
+.sp 2
+..
+.de MfG
+.sp 3
+.ie '\\$1'' Mit freundlichen Grüßen,
+.el \\$1
+.sp 5
+.nf
+\l'25m'
+\\*[Absender]
+..
+.de Anlagen
+.sp 3
+.rj 999
+.nf
+\fBAnlage(n)\fR
+..
+.de Markierungen
+.ev Markierungen
+.po \n[Druckrand]u
+.vs 0u
+.in 0u
+.\" Upper folding mark
+\v'|8.7c'\l'\n[LängeMarkierung]u'
+.br
+.\" Middle of page
+\v'|14.85c'\l'\n[LängeMarkierung]u'
+.br
+.\" Lower folding mark
+\v'|19.2c'\l'\n[LängeMarkierung]u'
+.br
+.po
+.ev
+..
+.hla de
+.pl 29.7c
+.ll 8.5c
+.nf
+.po \n[EinzugKopf]u
+.Markierungen
